@@ -272,6 +272,22 @@ class CornersProblem(search.SearchProblem):
 
     You must select a suitable state space and successor function
     """
+    """
+        Copy code for pos search problem for most of it.
+        Keep what corners you have traveled to before. 
+        Ever posible successors, give it a x,y state. Tell what corners we hit.
+        Check if this successor is a corner. 
+
+        In start state: create a tuple of 4 values that indicate whetehr or not we hit a corner.
+            Check if start state is a corner. 
+            start pos = start pos.
+            For every corners in self.corners, loop thru all those, if start pos is a corner, make it true in a dict.
+                Else, its false. 
+            When seeing a corner, mark as true and mark as successor. 
+
+            Gonna have a tuple of a x,y pair:
+    """
+
 
     def __init__(self, startingGameState):
         """
@@ -295,6 +311,9 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        # if self start state in corners, then set that specific boolean to true
+        return (self.startState, (False, False, False, False))
+
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -302,7 +321,13 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        if(all(state[1])):
+            return True
+        else:
+            return False
+
+        #util.raiseNotDefined()
 
     def getSuccessors(self, state):
         """
@@ -314,9 +339,10 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
+        
 
-        successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+        #successors = []
+        #for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
             #   x,y = currentPosition
@@ -325,6 +351,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+
+        successors = []
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            x,y = state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                """ Check if next x and next y is a corner, update the ruple"""
+
+                nextState = ((nextx, nexty),(""" Tuple of the false/trus"""))
+                cost = 1
+                successors.append( ( nextState, action, cost) )
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
