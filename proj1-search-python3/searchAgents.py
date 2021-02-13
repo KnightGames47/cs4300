@@ -304,6 +304,24 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        # start state is in the same order as Corners
+        # This initiates the startState
+        # We need to see if startingPosition is the same as any of the corners
+        # If it is, then we need to set that corner to true
+        temp = [self.startingPosition]
+        Tuple = []
+        for corner in self.corners:
+            if self.startingPosition == corner:
+                Tuple.append(True)
+            else:
+                Tuple.append(False)
+        
+        temp.append(tuple(Tuple))
+        
+        # print(temp)
+        self.startState = tuple(temp)
+        
+        
 
     def getStartState(self):
         """
@@ -311,8 +329,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        # if self start state in corners, then set that specific boolean to true
-        return (self.startState, (False, False, False, False))
+        return self.startState
 
         util.raiseNotDefined()
 
@@ -321,12 +338,19 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        # We want our goal state to have a location of a corner, and all true
+        # This is a list of all end goals:
+        trueTuple = (True, True, True, True)    
+        
+        goalState = [(self.corners[0], trueTuple), (self.corners[1], trueTuple), 
+                     (self.corners[2], trueTuple), (self.corners[2], trueTuple)]
+        
+        for goal in goalState:
+            if goal == state:
+                return True
 
-        if(all(state[1])):
-            return True
-        else:
-            return False
-
+        return False
+    
         #util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -350,17 +374,31 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***"
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state
+            x,y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                """ Check if next x and next y is a corner, update the ruple"""
-
-                nextState = ((nextx, nexty),(""" Tuple of the false/trus"""))
+                
+                nextCor = (nextx, nexty)
+                cornerStateList = list(state[1])
+                
+                # Updates the tuple
+                if nextCor == self.corners[0]:
+                    cornerStateList[0] = True
+                if nextCor == self.corners[1]:
+                    cornerStateList[1] = True
+                if nextCor == self.corners[2]:
+                    cornerStateList[2] = True
+                if nextCor == self.corners[3]:
+                    cornerStateList[3] = True
+                    
+                updatedTFTuple = tuple(cornerStateList)
+                
+                nextState = (nextCor,updatedTFTuple)
                 cost = 1
                 successors.append( ( nextState, action, cost) )
 
