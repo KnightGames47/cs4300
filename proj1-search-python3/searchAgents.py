@@ -547,7 +547,52 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+
+    foodList = foodGrid.asList()
+    if not foodList: # If food is empty
+        return 0
+    
+    shortest = 0
+    
+    lastFood = foodList[0]
+    if len(foodList) == 1: # If we only have one food left
+        distX = abs(position[0] - lastFood[0])
+        distY = abs(position[1] - lastFood[1])
+        shortest = distX + distY
+        return shortest
+    
+    # Find closest food
+    minFoodArr = []
+    for food in foodList:
+        distX = abs(position[0] - food[0])
+        distY = abs(position[1] - food[1])
+        minFoodArr.append(distX + distY)
+        
+    minCost = min(minFoodArr)
+    closestFood = foodList[minFoodArr.index(minCost)]
+    
+    distMinX = abs(position[0] - closestFood[0])
+    distMinY = abs(position[1] - closestFood[1])
+    distToMinFood =  distMinX + distMinY
+    
+    # after we have gone to get the first food, what is the cost of getting the 
+    # furthest food from that point?
+    farFoodArr = []
+    for food in foodList:
+        distX = abs(closestFood[0] - food[0])
+        distY = abs(closestFood[1] - food[1])
+        farFoodArr.append(distX + distY)
+        
+    farCost = max(farFoodArr)
+    farFood = foodList[farFoodArr.index(farCost)]
+    
+    distFarX = abs(closestFood[0] - farFood[0])
+    distFarY = abs(closestFood[1] - farFood[1])
+    distToFarFood =  distFarX + distFarY 
+    
+    shortest = distToMinFood + distToFarFood
+    
+    return shortest
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
