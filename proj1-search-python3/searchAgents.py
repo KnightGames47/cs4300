@@ -331,7 +331,7 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         return self.startState
 
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
@@ -341,13 +341,9 @@ class CornersProblem(search.SearchProblem):
         # We want our goal state to have a location of a corner, and all true
         # This is a list of all end goals:
         trueTuple = (True, True, True, True)    
-        
-        goalState = [(self.corners[0], trueTuple), (self.corners[1], trueTuple), 
-                     (self.corners[2], trueTuple), (self.corners[2], trueTuple)]
-        
-        for goal in goalState:
-            if goal == state:
-                return True
+
+        if trueTuple == state[1]:
+            return True
 
         return False
     
@@ -437,7 +433,27 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+
+    xy1 = state[0]
+    cornerList = {}
+        
+    cornerList[corners[0]] = state[1][0]
+    cornerList[corners[1]] = state[1][1]
+    cornerList[corners[2]] = state[1][2]
+    cornerList[corners[3]] = state[1][3]
+
+
+    temp_cl = []
+
+    for corner, visited in cornerList.items():
+        if not visited:
+            temp_cl.append(util.manhattanDistance(corner, xy1))
+    
+    if(len(temp_cl) == 0):
+        return 0
+
+    return max(temp_cl)
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
